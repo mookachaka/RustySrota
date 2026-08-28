@@ -10,3 +10,5 @@ Install Rust toolchain if needed.
 
 ```bash
 cargo add rustysrota
+
+cargo run --example triangle.rs
