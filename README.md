@@ -8,6 +8,10 @@ Computational data architecture based on ternary logic and semantic flow. Ground
 
 Install Rust toolchain if needed.
 
+rustup toolchain install stableCopyClone and build:git clone https://github.com/youruser/RustySrota.git (github.com in Bing) cd RustySrota cargo build --release
+
+
+
 ```bash
 cargo add rustysrota
 
@@ -28,3 +32,6 @@ RustySrota provides utilities and reference implementations for:
 - CSV/JSON IO for node/edge export and quick visualization
 
 This project is modular and intended for research prototypes, visualization, and CAD tool backends.
+
+
+rustup toolchain install stableCopyClone and build:git clone https://github.com/mookachaka/RustySrota.git (github.com in Bing) cd RustySrota cargo build --release
