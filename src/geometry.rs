@@ -6,7 +6,7 @@ pub struct EquilateralTriangle {
     /// Edge length of the triangle
     pub edge_length: f64,
     /// The three vertices of the triangle
-    pub nodes: [nalgebra::Point2<f64>; 3],
+    pub nodes: [(f64, f64); 3],
 }
 
 impl EquilateralTriangle {
@@ -32,12 +32,10 @@ impl EquilateralTriangle {
         // C = (edge_length/2, height)
         let height = edge_length * (3.0_f64.sqrt() / 2.0);
         
-        use nalgebra::Point2;
-        
         let nodes = [
-            Point2::new(0.0, 0.0),
-            Point2::new(edge_length, 0.0),
-            Point2::new(edge_length / 2.0, height),
+            (0.0, 0.0),
+            (edge_length, 0.0),
+            (edge_length / 2.0, height),
         ];
         
         EquilateralTriangle { edge_length, nodes }
