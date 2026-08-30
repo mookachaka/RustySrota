@@ -1,0 +1,67 @@
+name: CI — pinned security & quality
+
+on:
+  push:
+    branches:
+      - main
+      - Init
+      - 'feature/**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        task: [fmt, clippy, test, audit, geiger]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: clippy, rustfmt, rust-src
+
+      - name: Cache cargo registry & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Ensure lockfile
+        run: cargo generate-lockfile
+
+      - name: Check formatting
+        if: matrix.task == 'fmt'
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy (deny warnings)
+        if: matrix.task == 'clippy'
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run tests
+        if: matrix.task == 'test'
+        run: cargo test --all --no-fail-fast
+
+      - name: Run cargo-audit (action wrapper)
+        if: matrix.task == 'audit'
+        uses: rustsec/cargo-audit-action@v1
+        with:
+          args: '--deny advisories'
+
+      - name: Run cargo-geiger (action wrapper)
+        if: matrix.task == 'geiger'
+        uses: jonas-schievink/cargo-geiger-action@v1
+        with:
+          args: '--all-targets --all-features'
